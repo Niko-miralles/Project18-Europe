@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "repository": "Niko-miralles/Project18-Europe",
+  "root": "",
+  "framework": "Vite",
+  "entry": "index.html",
+  "publicDir": "public",
+  "siteUrl": "https://project18.eu/",
+  "editorOrigin": "https://formacms.app",
+  "contentPath": "public/forma/content.json"
+}
