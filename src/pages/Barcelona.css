@@ -1,0 +1,23 @@
+.bcn-cta {
+  align-self: flex-start;
+  margin-top: 40px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.bcn-cta:hover,
+.bcn-cta:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+
+@media (max-width: 820px) {
+  .bcn-cta {
+    margin-top: 28px;
+  }
+}
