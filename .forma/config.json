@@ -7,5 +7,6 @@
   "publicDir": "public",
   "siteUrl": "https://project18.eu/",
   "editorOrigin": "https://formacms.app",
-  "contentPath": "public/forma/content.json"
+  "contentPath": "public/forma/content.json",
+  "liveSiteId": "rtqGrXlYLGO5HqC9viXZE0HtMmfL2AmlHet-ivud8Yw"
 }
