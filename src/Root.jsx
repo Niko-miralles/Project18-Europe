@@ -7,6 +7,7 @@ import Ambassadors from './pages/Ambassadors.jsx'
 import Sponsors from './pages/Sponsors.jsx'
 import Admin from './pages/Admin.jsx'
 import SiteHeader from './components/SiteHeader.jsx'
+import GlobeMark from './components/GlobeMark.jsx'
 import { trackPage } from './track.js'
 
 const INTRO_WIDTH = 240
@@ -29,6 +30,8 @@ const Root = () => {
   const [applying, setApplying] = useState(false)
   const [applyFocus, setApplyFocus] = useState(0)
   const markRef = useRef(null)
+  const introRef = useRef(null)
+  const [landed, setLanded] = useState(!intro)
 
   useEffect(() => {
     const onPop = () => {
@@ -54,32 +57,36 @@ const Root = () => {
 
   useLayoutEffect(() => {
     const mark = markRef.current
-    if (!intro || !mark) return undefined
+    const wrap = introRef.current
+    const big = wrap?.querySelector('svg')
+    if (!intro || !mark || !wrap || !big) return undefined
     const root = document.documentElement
     window.history.scrollRestoration = 'manual'
     window.scrollTo(0, 0)
     root.classList.add('is-intro-locked')
-    const rect = mark.getBoundingClientRect()
-    const dx = window.innerWidth / 2 - (rect.left + rect.width / 2)
-    const dy = window.innerHeight / 2 - (rect.top + rect.height / 2)
-    const scale = Math.min(INTRO_WIDTH, window.innerWidth * 0.56) / rect.width
-    const start = `translate(${dx}px, ${dy}px) scale(${scale})`
-    const endStroke = getComputedStyle(mark).strokeWidth
-    const startStroke = `${(INTRO_STROKE_PX * 460) / (rect.width * scale)}px`
-    mark.style.transform = start
-    mark.style.strokeWidth = startStroke
+
+    const width = Math.min(INTRO_WIDTH, window.innerWidth * 0.56)
+    const height = (width * 184) / 460
+    Object.assign(wrap.style, {
+      width: `${width}px`,
+      left: `${(window.innerWidth - width) / 2}px`,
+      top: `${(window.innerHeight - height) / 2}px`
+    })
+    const startStroke = `${(INTRO_STROKE_PX * 460) / width}px`
+    big.style.strokeWidth = startStroke
 
     let settle
+    let stroke
     const timer = setTimeout(() => {
-      settle = mark.animate(
-        [
-          { transform: start, strokeWidth: startStroke },
-          { transform: 'none', strokeWidth: endStroke }
-        ],
-        { duration: SETTLE_MS, easing: 'cubic-bezier(0.7, 0, 0.2, 1)' }
-      )
-      mark.style.transform = ''
-      mark.style.strokeWidth = ''
+      const target = mark.getBoundingClientRect()
+      const scale = target.width / width
+      const dx = target.left + target.width / 2 - (window.innerWidth / 2)
+      const dy = target.top + target.height / 2 - (parseFloat(wrap.style.top) + height / 2)
+      const endStroke = getComputedStyle(mark).strokeWidth
+      const timing = { duration: SETTLE_MS, easing: 'cubic-bezier(0.7, 0, 0.2, 1)', fill: 'forwards' }
+      settle = wrap.animate([{ transform: 'none' }, { transform: `translate(${dx}px, ${dy}px) scale(${scale})` }], timing)
+      stroke = big.animate([{ strokeWidth: startStroke }, { strokeWidth: endStroke }], timing)
+      settle.onfinish = () => setLanded(true)
       setRevealed(true)
     }, DRAW_MS)
     const unlock = setTimeout(() => root.classList.remove('is-intro-locked'), DRAW_MS + SETTLE_MS)
@@ -89,8 +96,7 @@ const Root = () => {
       clearTimeout(unlock)
       root.classList.remove('is-intro-locked')
       settle?.cancel()
-      mark.style.transform = ''
-      mark.style.strokeWidth = ''
+      stroke?.cancel()
     }
   }, [intro])
 
@@ -135,11 +141,18 @@ const Root = () => {
         <SiteHeader
           markRef={markRef}
           path={path}
-          className={[playIntro && 'is-intro', playIntro && revealed && 'is-revealed'].filter(Boolean).join(' ')}
-          animated={playIntro}
+          className={[playIntro && 'is-intro', playIntro && revealed && 'is-revealed', !landed && 'is-mark-hidden']
+            .filter(Boolean)
+            .join(' ')}
+          animated={false}
           onNavigate={navigate}
           onApply={onApply}
         />
+      )}
+      {intro && !landed && (
+        <div className="intro-mark" ref={introRef} aria-hidden="true">
+          <GlobeMark className="intro-mark-svg" label="" />
+        </div>
       )}
       {page}
     </>
