@@ -186,26 +186,6 @@ const Ambassadors = () => {
             </ul>
           </div>
 
-          <div className="amb-team">
-            <p className="ls-eyebrow">Our ambassadors</p>
-            <ul>
-              {AMBASSADORS.map(a => {
-                const c = COUNTRIES.find(x => x.name === a.country);
-                return (
-                  <li key={a.country}>
-                    <span className="amb-flag" aria-hidden="true">
-                      {c ? flag(c.code) : ''}
-                    </span>
-                    <span>
-                      <strong>{a.name}</strong>
-                      <em>Ambassador · {a.country}</em>
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
           <ul className="amb-countries">
             {COUNTRIES.map(c => {
               const taken = AMBASSADOR_COUNTRIES.includes(c.name);
@@ -260,6 +240,26 @@ const Ambassadors = () => {
               />
             )}
           </div>
+        </section>
+
+        <section className="amb-team">
+          <p className="ls-eyebrow">Our ambassadors</p>
+          <ul>
+            {AMBASSADORS.map(a => {
+              const c = COUNTRIES.find(x => x.name === a.country);
+              return (
+                <li key={a.country}>
+                  <span className="amb-flag" aria-hidden="true">
+                    {c ? flag(c.code) : ''}
+                  </span>
+                  <span>
+                    <strong>{a.name}</strong>
+                    <em>Ambassador · {a.country}</em>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </section>
       </main>
       <SiteFooter className="landing-footer" />
