@@ -36,8 +36,7 @@ export const APPLICATION_FIELDS = {
   barcelona: 10,
   barcelonaNote: 4000,
   video: 1000,
-  whatsapp: 40,
-  jobs: 10
+  whatsapp: 40
 };
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

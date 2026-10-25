@@ -16,8 +16,7 @@ const FIELDS = [
   ['links', 'Links'],
   ['barcelona', 'Barcelona 2027'],
   ['barcelonaNote', 'Note'],
-  ['video', 'Video'],
-  ['jobs', 'Jobs program']
+  ['video', 'Video']
 ];
 
 const TAB_TITLES = {

@@ -134,13 +134,6 @@ const QUESTIONS = [
     autoComplete: "tel",
     validate: (v) => (isPhone(v) ? "" : "Please enter a valid phone number."),
   },
-  {
-    id: "jobs",
-    title: "Want to join our jobs program?",
-    hint: "You’ll occasionally receive job offers from companies in our network on WhatsApp or email.",
-    type: "choice",
-    options: [{ value: "Yes" }, { value: "No" }],
-  },
 ];
 
 const ArrowLeft = () => (
