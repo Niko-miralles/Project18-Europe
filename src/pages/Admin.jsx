@@ -13,8 +13,7 @@ const FIELDS = [
   ['links', 'Links'],
   ['barcelona', 'Barcelona 2027'],
   ['barcelonaNote', 'Note'],
-  ['video', 'Video'],
-  ['jobs', 'Jobs program']
+  ['video', 'Video']
 ];
 
 const SEARCH_FIELDS = ['name', ...FIELDS.map(([key]) => key)];
