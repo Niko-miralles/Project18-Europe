@@ -3,7 +3,7 @@ import ApplyForm from '../components/ApplyForm';
 import DotMap from '../components/DotMap';
 import { Accordion, Icon, InfoCards, Steps } from '../components/PageBlocks';
 import SiteFooter from '../components/SiteFooter';
-import { AMBASSADOR_COUNTRIES, COUNTRIES, ambassadorBatches, currentBatch, flag } from '../data/countries';
+import { AMBASSADORS, AMBASSADOR_COUNTRIES, COUNTRIES, ambassadorBatches, ambassadorOf, currentBatch, flag } from '../data/countries';
 import { ambassadorsMap, countryAt } from '../maps/ambassadors';
 import './Community.css';
 import './Ambassadors.css';
@@ -167,9 +167,11 @@ const Ambassadors = () => {
                   {flag(hover.country.code)}
                 </span>
                 <strong>{hover.country.name}</strong>
-                <span className={`amb-tip-status${AMBASSADOR_COUNTRIES.includes(hover.country.name) ? ' is-filled' : ''}`}>
-                  {AMBASSADOR_COUNTRIES.includes(hover.country.name) ? 'Ambassador in place' : 'Open · click to apply'}
-                </span>
+                {ambassadorOf(hover.country.name) ? (
+                  <span className="amb-tip-status is-filled">{ambassadorOf(hover.country.name)}</span>
+                ) : (
+                  <span className="amb-tip-status">Open · click to apply</span>
+                )}
               </div>
             )}
             <ul className="amb-legend">
@@ -181,6 +183,26 @@ const Ambassadors = () => {
                 <span className="amb-dot" />
                 Open seat
               </li>
+            </ul>
+          </div>
+
+          <div className="amb-team">
+            <p className="ls-eyebrow">Our ambassadors</p>
+            <ul>
+              {AMBASSADORS.map(a => {
+                const c = COUNTRIES.find(x => x.name === a.country);
+                return (
+                  <li key={a.country}>
+                    <span className="amb-flag" aria-hidden="true">
+                      {c ? flag(c.code) : ''}
+                    </span>
+                    <span>
+                      <strong>{a.name}</strong>
+                      <em>Ambassador · {a.country}</em>
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -198,7 +220,10 @@ const Ambassadors = () => {
                     <span className="amb-flag" aria-hidden="true">
                       {flag(c.code)}
                     </span>
-                    {c.name}
+                    <span className="amb-country-name">
+                      {c.name}
+                      {taken && <em>{ambassadorOf(c.name)}</em>}
+                    </span>
                     <span className="amb-status">{taken ? 'Filled' : 'Open'}</span>
                   </button>
                 </li>

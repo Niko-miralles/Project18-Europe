@@ -41,7 +41,11 @@ export const COUNTRIES = [
   ['United Kingdom', 'GB']
 ].map(([name, code, mapName]) => ({ name, code, mapName: mapName || name }));
 
-export const AMBASSADOR_COUNTRIES = ['Italy'];
+export const AMBASSADORS = [{ country: 'Italy', name: 'Federico Fassio' }];
+
+export const AMBASSADOR_COUNTRIES = AMBASSADORS.map(a => a.country);
+
+export const ambassadorOf = country => AMBASSADORS.find(a => a.country === country)?.name;
 
 export const flag = code =>
   code === 'XK' ? '🇽🇰' : String.fromCodePoint(...[...code].map(c => 0x1f1e6 + c.charCodeAt(0) - 65));

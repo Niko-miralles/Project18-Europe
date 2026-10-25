@@ -222,6 +222,63 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+.amb-country-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.amb-country-name em {
+  font-style: normal;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.amb-team {
+  margin-top: 56px;
+  text-align: center;
+}
+
+.amb-team ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.amb-team li {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+}
+
+.amb-team li .amb-flag {
+  font-size: 26px;
+}
+
+.amb-team strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.amb-team em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 .amb-flag {
   font-size: 18px;
   line-height: 1;

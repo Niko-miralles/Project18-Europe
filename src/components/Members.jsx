@@ -6,7 +6,7 @@ const MEMBERS = [
     tag: 'Space tech',
     name: 'Federico',
     role: 'Co-Founder | YET · 16',
-    city: 'Turin',
+    city: 'Italy',
     photo: '/members/federico.jpg',
     bio: 'CubeSat PM at Space Eagle. At 16, his team won the ESA EO Makerspace Hackathon at ESA-ESRIN with on-orbit AI that tracks Arctic ice in hours instead of days.'
   },
@@ -14,15 +14,15 @@ const MEMBERS = [
     tag: 'Hackathons',
     name: 'Samuel',
     role: 'Co-Founder | HackSpain · 16',
-    city: 'Madrid',
+    city: 'Spain',
     photo: '/members/samuel.jpg',
-    bio: 'Product engineer at QuiverAI and co-founder of HackSpain, which brought 250+ young builders to Madrid, backed by Google, Cursor and Cognition. Also runs an app at $10k MRR.'
+    bio: 'Product engineer at QuiverAI and co-founder of HackSpain, which brought 250+ young builders to Madrid, backed by Google, Cursor and Cognition.'
   },
   {
     tag: 'AI',
     name: 'Edvin',
     role: 'Founder | Grit AI · 17',
-    city: 'Jönköping, Sweden',
+    city: 'Sweden',
     photo: '/members/edvin.jpg',
     bio: 'Started his first business at 11 and was cold-calling US contractors at 13. Hit $1M ARR and a 49-person team by 16. Now an EWOR Fellow and Slush 20U20, building AI call centers for home improvement.'
   },
@@ -30,7 +30,7 @@ const MEMBERS = [
     tag: 'Consumer AI',
     name: 'Niko',
     role: '3x Hackathon Winner · 16',
-    city: 'Barcelona',
+    city: 'Spain',
     photo: '/members/niko.jpg',
     bio: 'Three hackathons, three wins, including the hackathon for hackathon winners in Malmö. CTO for several national soccer teams.'
   }
