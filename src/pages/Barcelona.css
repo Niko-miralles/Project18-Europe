@@ -1,5 +1,10 @@
 .bcn-cta {
   align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
   margin-top: 40px;
   font-size: 10px;
   letter-spacing: 0.3em;

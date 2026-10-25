@@ -41,6 +41,13 @@ const isPhone = (value) => /^\+?[\d\s().-]+$/.test(value) && value.replace(/\D/g
 
 const QUESTIONS = [
   {
+    id: "interest",
+    title: "What are you interested in?",
+    hint: "Tell us what you want from Project18 Europe.",
+    type: "choice",
+    options: [{ value: "Community" }, { value: "Barcelona 2027" }, { value: "Both" }],
+  },
+  {
     id: "name",
     title: "What’s your name?",
     placeholder: "Your full name",
@@ -98,6 +105,7 @@ const QUESTIONS = [
   },
   {
     id: "barcelona",
+    when: (a) => a.interest !== "Community",
     title: "Could you join Project18 Barcelona 2027?",
     hint: "Our first gathering: 30–40 founders, one weekend in Barcelona.",
     hintStrong: "Travel, accommodation and meals covered.",
@@ -167,11 +175,16 @@ const ArrowRight = () => (
   </svg>
 );
 
+const isVisible = (q, a) => !q.when || q.when(a);
+
 const Application = ({ email, initialAnswers = {}, initialStep = 0, editing = false }) => {
-  const [step, setStep] = useState(() => Math.min(initialStep, QUESTIONS.length - 1));
-  const [answers, setAnswers] = useState(() =>
-    initialAnswers.dob ? { ...initialAnswers, dob: formatDob(initialAnswers.dob) } : initialAnswers,
-  );
+  const legacy = Object.keys(initialAnswers).length > 0 && !initialAnswers.interest;
+  const [step, setStep] = useState(() => initialStep + (legacy && initialStep > 0 ? 1 : 0));
+  const [answers, setAnswers] = useState(() => ({
+    ...initialAnswers,
+    ...(legacy && { interest: "Both" }),
+    ...(initialAnswers.dob && { dob: formatDob(initialAnswers.dob) }),
+  }));
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -194,9 +207,11 @@ const Application = ({ email, initialAnswers = {}, initialStep = 0, editing = fa
     }, 220);
   };
 
-  const question = QUESTIONS[step];
+  const visible = QUESTIONS.filter((q) => isVisible(q, answers));
+  const current = Math.min(step, visible.length - 1);
+  const question = visible[current];
   const value = answers[question.id];
-  const isLast = step === QUESTIONS.length - 1;
+  const isLast = current === visible.length - 1;
 
   useEffect(() => {
     fieldRef.current?.focus({ preventScroll: true });
@@ -305,19 +320,24 @@ const Application = ({ email, initialAnswers = {}, initialStep = 0, editing = fa
     }
 
     const final = { ...answers, [question.id]: clean };
+    for (const q of QUESTIONS) {
+      if (isVisible(q, final)) continue;
+      delete final[q.id];
+      delete final[`${q.id}Note`];
+    }
     setAnswers(final);
     setError("");
     if (isLast) {
       submit(final);
       return;
     }
-    saveDraft(final, step + 1);
-    go(() => setStep((s) => s + 1));
+    saveDraft(final, current + 1);
+    go(() => setStep(current + 1));
   };
 
   const back = () => {
     setError("");
-    go(() => setStep((s) => s - 1));
+    go(() => setStep(current - 1));
   };
 
   if (done) {
@@ -380,7 +400,7 @@ const Application = ({ email, initialAnswers = {}, initialStep = 0, editing = fa
         </div>
         <div className="apply-progress" aria-hidden="true">
           <span
-            style={{ transform: `scaleX(${(step + 1) / QUESTIONS.length})` }}
+            style={{ transform: `scaleX(${(current + 1) / visible.length})` }}
           />
         </div>
       </header>
@@ -511,8 +531,8 @@ const Application = ({ email, initialAnswers = {}, initialStep = 0, editing = fa
             type="button"
             className="apply-back"
             onClick={back}
-            disabled={step === 0}
-            aria-hidden={step === 0}
+            disabled={current === 0}
+            aria-hidden={current === 0}
           >
             <ArrowLeft />
             Back

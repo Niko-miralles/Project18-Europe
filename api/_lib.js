@@ -6,8 +6,25 @@ const PREFIX = 'p18:';
 export const WAITLIST_KEY = `${PREFIX}waitlist`;
 export const APPS_KEY = `${PREFIX}applications`;
 export const DRAFTS_KEY = `${PREFIX}drafts`;
+export const AMBASSADORS_KEY = `${PREFIX}ambassadors`;
+export const SPONSORS_KEY = `${PREFIX}sponsors`;
+export const STATS_PREFIX = `${PREFIX}stats:`;
+
+export const FORMS = {
+  ambassador: {
+    key: AMBASSADORS_KEY,
+    required: ['batch', 'name', 'country', 'email', 'whatsapp', 'why'],
+    fields: { batch: 60, name: 200, country: 80, email: 200, whatsapp: 40, linkedin: 300, why: 4000, notes: 4000 }
+  },
+  sponsor: {
+    key: SPONSORS_KEY,
+    required: ['company', 'name', 'email'],
+    fields: { company: 200, name: 200, role: 120, email: 200, website: 300, country: 80, interest: 60, budget: 60, message: 4000 }
+  }
+};
 
 export const APPLICATION_FIELDS = {
+  interest: 20,
   name: 200,
   dob: 20,
   location: 200,
@@ -34,6 +51,21 @@ export const redis = async (...command) => {
   if (!res.ok || data.error) throw new Error(data.error || `Redis ${res.status}`);
   return data.result;
 };
+
+export const pipeline = async commands => {
+  if (!commands.length) return [];
+  const base = process.env.STORAGE_KV_REST_API_URL || process.env.KV_REST_API_URL;
+  const res = await fetch(`${base}/pipeline`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${process.env.STORAGE_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN}` },
+    body: JSON.stringify(commands)
+  });
+  const data = await res.json();
+  if (!res.ok || !Array.isArray(data)) throw new Error(data?.error || `Redis ${res.status}`);
+  return data.map(r => r.result);
+};
+
+export const dayKey = (date = new Date()) => date.toISOString().slice(0, 10);
 
 const clientIp = req =>
   String(req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || 'unknown')

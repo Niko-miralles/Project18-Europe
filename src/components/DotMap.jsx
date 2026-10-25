@@ -20,6 +20,7 @@ const WAVE_EVERY = 140;
 const MAX_WAVES = 2;
 const CELL = 48;
 const PAD = 8;
+const HALO = 5;
 
 const GRAYS = Array.from({ length: 256 }, (_, v) => `rgb(${v}, ${v}, ${v})`);
 
@@ -76,12 +77,23 @@ const drawDots = (ctx, dots, spread) => {
     for (let i = 0; i < list.length; i += 3) ctx.rect(list[i], list[i + 1], list[i + 2], list[i + 2]);
     ctx.fill();
   }
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+  ctx.beginPath();
+  for (const { x, y, sx, sy, ox, oy, city, flash } of dots) {
+    if (!city) continue;
+    const cx = x + sx * spread + ox;
+    const cy = y + sy * spread + oy;
+    const r = HALO + flash * 3;
+    ctx.moveTo(cx + r, cy);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  }
+  ctx.fill();
 };
 
 const easeOut = t => 1 - (1 - t) ** 3;
 const easeIn = t => t ** 2;
 
-const DotMap = ({ className = '', leaving = false, map, enter = 'scatter' }) => {
+const DotMap = ({ className = '', leaving = false, map, enter = 'scatter', interactive = true }) => {
   const canvasRef = useRef(null);
   const state = useRef({
     dots: null,
@@ -296,7 +308,7 @@ const DotMap = ({ className = '', leaving = false, map, enter = 'scatter' }) => 
       s.lastWave = null;
       wake();
     };
-    if (finePointer && !reduced) {
+    if (interactive && finePointer && !reduced) {
       window.addEventListener('pointermove', onMove);
       document.documentElement.addEventListener('pointerleave', onLeave);
     }

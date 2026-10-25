@@ -1,0 +1,214 @@
+.pb-cards {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.pb-card {
+  padding: 22px 22px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pb-card h3 {
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.pb-card h3 svg {
+  width: 17px;
+  height: 17px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pb-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+}
+
+.pb-card li {
+  display: grid;
+  grid-template-columns: 17px minmax(0, 1fr);
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.pb-card li svg {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.pb-card strong {
+  font-weight: 500;
+  color: #fff;
+}
+
+.pb-steps {
+  margin: 56px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.pb-steps li {
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pb-step-num {
+  margin: 0;
+  font-size: 32px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.pb-step-num span {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.pb-steps h3 {
+  margin: 14px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.pb-steps p:not(.pb-step-num) {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pb-facts {
+  margin: 56px 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pb-facts > div {
+  padding: 26px 20px;
+  text-align: left;
+}
+
+.pb-facts > div + div {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pb-facts dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pb-facts dt svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pb-facts dd {
+  margin: 12px 0 0;
+  font-size: 17px;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.pb-accordion {
+  margin-top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  text-align: left;
+}
+
+.pb-accordion > button {
+  width: 100%;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pb-accordion > button svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.pb-accordion.is-open > button svg {
+  transform: rotate(180deg);
+}
+
+.pb-accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.pb-accordion.is-open .pb-accordion-body {
+  grid-template-rows: 1fr;
+}
+
+.pb-accordion-body > div {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 22px;
+}
+
+.pb-accordion.is-open .pb-accordion-body > div {
+  padding-bottom: 22px;
+}
+
+.pb-accordion .pb-steps {
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .pb-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pb-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pb-facts > div:nth-child(3) {
+    border-left: 0;
+  }
+
+  .pb-facts > div:nth-child(n + 3) {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}

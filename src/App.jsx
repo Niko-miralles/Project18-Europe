@@ -1,29 +1,22 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PatternWaves from './components/PatternWaves';
-import Logo from './components/Logo';
+import SiteFooter from './components/SiteFooter';
+import IntroVideo from './components/IntroVideo';
+import Story from './components/Story';
+import Members from './components/Members';
+import LandingSections from './components/LandingSections';
 import Waitlist from './components/Waitlist';
 import Application from './components/Application';
 
-const INTRO_SCALE = 1.8;
-const DRAW_MS = 1900;
-const SETTLE_MS = 1200;
-const LEAVE_MS = 320;
-
-const App = ({ navigate, entered = false }) => {
-  const markRef = useRef(null);
-  const [revealed, setRevealed] = useState(false);
+const App = ({ navigate, intro = false, revealed = true, applyFocus = 0, onApplying }) => {
   const [bgReady, setBgReady] = useState(false);
   const [email, setEmail] = useState(null);
   const [resume, setResume] = useState(null);
-  const [quick] = useState(entered);
-  const [leaving, setLeaving] = useState(false);
-  const leaveTimer = useRef(null);
+  const signupRef = useRef(null);
 
   useEffect(() => {
     document.title = 'Project18 Europe';
   }, []);
-
-  useEffect(() => () => clearTimeout(leaveTimer.current), []);
 
   useEffect(() => {
     const token = new URLSearchParams(window.location.search).get('apply');
@@ -39,63 +32,69 @@ const App = ({ navigate, entered = false }) => {
       .catch(() => {});
   }, []);
 
-  useLayoutEffect(() => {
-    const mark = markRef.current;
-    if (quick || !mark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setRevealed(true);
-      return undefined;
-    }
-    const rect = mark.getBoundingClientRect();
-    const dx = window.innerWidth / 2 - (rect.left + rect.width / 2);
-    const dy = window.innerHeight / 2 - (rect.top + rect.height / 2);
-    const scale = Math.min(INTRO_SCALE, (window.innerWidth * 0.86) / rect.width);
-    const start = `translate(${dx}px, ${dy}px) scale(${scale})`;
-    mark.style.transform = start;
+  useEffect(() => {
+    if (applyFocus) signupRef.current?.focus();
+  }, [applyFocus]);
 
-    let settle;
-    const timer = setTimeout(() => {
-      settle = mark.animate([{ transform: start }, { transform: 'none' }], {
-        duration: SETTLE_MS,
-        easing: 'cubic-bezier(0.7, 0, 0.2, 1)'
-      });
-      mark.style.transform = '';
-      setRevealed(true);
-    }, DRAW_MS);
-
-    return () => {
-      clearTimeout(timer);
-      settle?.cancel();
-      mark.style.transform = '';
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const scrollToApply = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => signupRef.current?.focus({ preventScroll: true }), 450);
+  };
 
   useEffect(() => {
-    if (!revealed) return undefined;
-    const timer = setTimeout(() => setBgReady(true), quick ? 160 : 0);
+    onApplying?.(Boolean(email));
+    if (!email) return undefined;
+    const timer = setTimeout(() => setBgReady(true), 160);
     return () => clearTimeout(timer);
-  }, [revealed, quick]);
+  }, [email, onApplying]);
 
-  useEffect(() => {
-    if (email) return undefined;
-    document.documentElement.classList.add('is-locked');
-    return () => document.documentElement.classList.remove('is-locked');
-  }, [email]);
+  useEffect(() => () => onApplying?.(false), [onApplying]);
 
   const goTo = to => e => {
     if (!navigate || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
-    if (leaving) return;
-    setLeaving(true);
-    leaveTimer.current = setTimeout(() => navigate(to), LEAVE_MS);
+    navigate(to);
   };
 
-  const pageClass = ['page', revealed && 'is-revealed', quick && 'is-quick', leaving && 'is-leaving']
-    .filter(Boolean)
-    .join(' ');
+  if (!email) {
+    const landingClass = ['landing', intro && 'is-intro', intro && revealed && 'is-revealed'].filter(Boolean).join(' ');
+    return (
+      <div className={landingClass}>
+        <div className="landing-image" aria-hidden="true" />
+        <main className="landing-main">
+          <section className="landing-hero">
+            <div className="landing-copy">
+              <h1>
+                Europe’s next great companies are being built by <em>founders under 18.</em>
+              </h1>
+              <p className="landing-lead">
+                The youngest founders have the least network and support. We’re building a community to connect
+                Europe’s best founders under 18 with the people and opportunities they need to grow.
+              </p>
+              <div className="landing-cta">
+                <Waitlist onJoin={setEmail} inputRef={signupRef} label="Apply" />
+              </div>
+              <p className="landing-meta">
+                <a href="/barcelona-2027" data-spa onClick={goTo('/barcelona-2027')}>
+                  Project18 Europe Barcelona 2027
+                </a>
+                <span aria-hidden="true">·</span>
+                <span>Applications open</span>
+              </p>
+            </div>
+          </section>
+          <IntroVideo />
+          <Story />
+          <Members onApply={scrollToApply} />
+          <LandingSections onApply={scrollToApply} onNavigate={goTo} />
+        </main>
+        <SiteFooter className="landing-footer" />
+      </div>
+    );
+  }
 
   return (
-    <main className={pageClass}>
+    <main className="page is-revealed is-quick">
       <div className="page-background">
         {bgReady && (
           <PatternWaves
@@ -117,32 +116,12 @@ const App = ({ navigate, entered = false }) => {
           />
         )}
       </div>
-      {email ? (
-        <Application
-          email={email}
-          initialAnswers={resume?.answers}
-          initialStep={resume?.step}
-          editing={resume?.submitted}
-        />
-      ) : (
-        <section className="hero">
-          <Logo markRef={markRef} />
-          <div className="hero-cta">
-            <Waitlist onJoin={setEmail} />
-          </div>
-          <nav className="hero-nav" aria-label="Sections">
-            <a href="/community" onClick={goTo('/community')}>
-              Community
-            </a>
-            <a href="/barcelona-2027" onClick={goTo('/barcelona-2027')}>
-              Barcelona 2027
-            </a>
-            <a href="/about" onClick={goTo('/about')}>
-              About
-            </a>
-          </nav>
-        </section>
-      )}
+      <Application
+        email={email}
+        initialAnswers={resume?.answers}
+        initialStep={resume?.step}
+        editing={resume?.submitted}
+      />
     </main>
   );
 };

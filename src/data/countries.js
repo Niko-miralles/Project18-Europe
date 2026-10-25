@@ -1,0 +1,60 @@
+export const COUNTRIES = [
+  ['Albania', 'AL'],
+  ['Austria', 'AT'],
+  ['Belgium', 'BE'],
+  ['Bosnia and Herzegovina', 'BA', 'Bosnia and Herz.'],
+  ['Bulgaria', 'BG'],
+  ['Croatia', 'HR'],
+  ['Cyprus', 'CY'],
+  ['Czech Republic', 'CZ', 'Czechia'],
+  ['Denmark', 'DK'],
+  ['Estonia', 'EE'],
+  ['Finland', 'FI'],
+  ['France', 'FR'],
+  ['Germany', 'DE'],
+  ['Greece', 'GR'],
+  ['Hungary', 'HU'],
+  ['Iceland', 'IS'],
+  ['Ireland', 'IE'],
+  ['Italy', 'IT'],
+  ['Kosovo', 'XK'],
+  ['Latvia', 'LV'],
+  ['Lithuania', 'LT'],
+  ['Luxembourg', 'LU'],
+  ['Malta', 'MT'],
+  ['Moldova', 'MD'],
+  ['Montenegro', 'ME'],
+  ['Netherlands', 'NL'],
+  ['North Macedonia', 'MK', 'Macedonia'],
+  ['Norway', 'NO'],
+  ['Poland', 'PL'],
+  ['Portugal', 'PT'],
+  ['Romania', 'RO'],
+  ['Serbia', 'RS'],
+  ['Slovakia', 'SK'],
+  ['Slovenia', 'SI'],
+  ['Spain', 'ES'],
+  ['Sweden', 'SE'],
+  ['Switzerland', 'CH'],
+  ['Türkiye', 'TR', 'Turkey'],
+  ['Ukraine', 'UA'],
+  ['United Kingdom', 'GB']
+].map(([name, code, mapName]) => ({ name, code, mapName: mapName || name }));
+
+export const AMBASSADOR_COUNTRIES = ['Italy'];
+
+export const flag = code =>
+  code === 'XK' ? '🇽🇰' : String.fromCodePoint(...[...code].map(c => 0x1f1e6 + c.charCodeAt(0) - 65));
+
+export const ambassadorBatches = (count = 3, from = new Date(), offset = 1) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const start = Math.floor(from.getMonth() / 3) + offset;
+  return Array.from({ length: count }, (_, i) => {
+    const q = start + i;
+    const year = from.getFullYear() + Math.floor(q / 4);
+    const m = (q % 4) * 3;
+    return `${months[m]}–${months[m + 2]} ${year}`;
+  });
+};
+
+export const currentBatch = () => ambassadorBatches(1, new Date(), 0)[0];

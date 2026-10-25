@@ -422,3 +422,135 @@
     gap: 6px 16px;
   }
 }
+
+.admin-entry-sub {
+  margin-left: 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.admin-tabs {
+  flex-wrap: wrap;
+}
+
+.admin-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.admin-kpi {
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.admin-kpi p {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-kpi strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.admin-chart,
+.admin-rank {
+  margin-top: 28px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.admin-chart h3,
+.admin-rank h3 {
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.admin-bars {
+  height: 160px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.admin-bar {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.admin-bar span {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.admin-bar:hover span {
+  background: #fff;
+}
+
+.admin-bars-axis {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-ranks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0 16px;
+}
+
+.admin-rank ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.admin-rank li {
+  position: relative;
+  padding: 7px 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.admin-rank-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.admin-rank-label,
+.admin-rank-n {
+  position: relative;
+}
+
+.admin-rank-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-rank-n {
+  color: #fff;
+}

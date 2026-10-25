@@ -16,6 +16,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://project18.eu/ambassadors</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://project18.eu/sponsors</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://project18.eu/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

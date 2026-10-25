@@ -1,7 +1,7 @@
-export const TERRAIN = [0x18, 0x22, 0x2b, 0x34, 0x40, 0x4a];
-export const CITY = 0xe6;
-export const DOT = 1.5;
-export const CITY_DOT = 2;
+export const TERRAIN = [0x30, 0x3e, 0x4c, 0x5c, 0x6e, 0x82];
+export const CITY = 0xff;
+export const DOT = 1.7;
+export const CITY_DOT = 2.6;
 
 export const hash = (x, y) => {
   const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;

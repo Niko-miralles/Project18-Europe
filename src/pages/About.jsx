@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import GlobeMark from '../components/GlobeMark';
 import useMobileScrollLock from '../hooks/useMobileScrollLock';
 import './Community.css';
 import './About.css';
@@ -10,27 +9,15 @@ const PRINCIPLES = [
   ['03', 'Grow', 'Create opportunities together.']
 ];
 
-const About = ({ navigate }) => {
+const About = () => {
   useMobileScrollLock();
 
   useEffect(() => {
     document.title = 'About | Project18 Europe';
   }, []);
 
-  const goHome = e => {
-    if (!navigate || e.metaKey || e.ctrlKey || e.shiftKey) return;
-    e.preventDefault();
-    navigate('/');
-  };
-
   return (
     <main className="about">
-      <header className="community-head">
-        <a href="/" className="community-home" aria-label="Project18 Europe — home" onClick={goHome}>
-          <GlobeMark className="community-mark" animated={false} label="Project18 Europe" />
-        </a>
-      </header>
-
       <div className="about-body">
         <section className="about-left">
           <p className="community-eyebrow">About Project18</p>

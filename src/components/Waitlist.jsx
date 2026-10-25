@@ -3,7 +3,7 @@ import { useState } from 'react';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const STORAGE_KEY = 'yef-waitlist';
 
-const Waitlist = ({ initialEmail = '', onJoin }) => {
+const Waitlist = ({ initialEmail = '', onJoin, inputRef, label = 'Join the waitlist' }) => {
   const [email, setEmail] = useState(initialEmail);
   const [status, setStatus] = useState('idle');
 
@@ -33,10 +33,11 @@ const Waitlist = ({ initialEmail = '', onJoin }) => {
     <form className="waitlist" onSubmit={onSubmit} noValidate>
       <div className={`waitlist-field${status === 'invalid' || status === 'used' ? ' is-invalid' : ''}`}>
         <input
+          ref={inputRef}
           type="email"
           name="email"
           autoComplete="email"
-          placeholder="you@company.com"
+          placeholder="your@email.com"
           aria-label="Email address"
           value={email}
           onChange={e => {
@@ -45,7 +46,7 @@ const Waitlist = ({ initialEmail = '', onJoin }) => {
           }}
         />
         <button type="submit" aria-busy={status === 'sending'}>
-          Join the waitlist
+          {label}
         </button>
       </div>
       {status === 'invalid' && <p className="waitlist-note">Please enter a valid email.</p>}

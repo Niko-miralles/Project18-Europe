@@ -4,7 +4,7 @@
   min-height: 600px;
   display: flex;
   flex-direction: column;
-  padding: 36px clamp(24px, 6vw, 96px) 0;
+  padding: 100px clamp(24px, 6vw, 96px) 0;
   overflow: hidden;
   background: #000;
 }
@@ -107,7 +107,7 @@
   .about {
     height: 100svh;
     min-height: 0;
-    padding: clamp(20px, 3.4vh, 28px) 28px 0;
+    padding: 88px 28px 0;
   }
 
   .about-body {

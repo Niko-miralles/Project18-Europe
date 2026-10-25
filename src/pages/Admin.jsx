@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import { FormEntries, StatsPanel } from './AdminExtra';
+import { AMBASSADOR_FIELDS, SPONSOR_FIELDS, exportCsv } from './adminForms';
 import './Admin.css';
 
 const FIELDS = [
   ['email', 'Email'],
+  ['interest', 'Interested in'],
   ['whatsapp', 'WhatsApp'],
   ['dob', 'Born'],
   ['location', 'Based in'],
@@ -16,6 +19,14 @@ const FIELDS = [
   ['video', 'Video'],
   ['jobs', 'Jobs program']
 ];
+
+const TAB_TITLES = {
+  applications: 'Applications',
+  emails: 'Emails',
+  ambassadors: 'Ambassadors',
+  sponsors: 'Sponsors',
+  stats: 'Stats'
+};
 
 const SEARCH_FIELDS = ['name', ...FIELDS.map(([key]) => key)];
 
@@ -63,13 +74,13 @@ const downloadEmails = (waitlist, applications) => {
   const byEmail = new Map(applications.map(a => [a.email, a]));
   saveCsv(
     'emails',
-    ['Email', 'Status', 'Name', 'Answers', 'Joined', 'Edit link'],
+    ['Email', 'Status', 'Name', 'Interested in', 'Answers', 'Joined', 'Edit link'],
     [...waitlist]
       .sort((a, b) => (b.joinedAt || '').localeCompare(a.joinedAt || ''))
       .map(w => {
         const app = byEmail.get(w.email);
         const status = app ? 'Applied' : w.answered ? 'In progress' : 'Not started';
-        return [w.email, status, app?.name, app ? '' : w.answered, w.joinedAt, w.editUrl];
+        return [w.email, status, app?.name, app?.interest || w.interest, app ? '' : w.answered, w.joinedAt, w.editUrl];
       })
   );
 };
@@ -290,9 +301,10 @@ const Filter = ({ label, value, onChange, options }) => (
 
 const Admin = () => {
   const [state, setState] = useState('loading');
-  const [data, setData] = useState({ applications: [], waitlist: [] });
+  const [data, setData] = useState({ applications: [], waitlist: [], ambassadors: [], sponsors: [], stats: null });
   const [query, setQuery] = useState('');
   const [barcelona, setBarcelona] = useState('all');
+  const [interest, setInterest] = useState('all');
   const [video, setVideo] = useState('all');
   const [period, setPeriod] = useState('all');
   const [city, setCity] = useState('all');
@@ -304,7 +316,8 @@ const Admin = () => {
       const res = await fetch('/api/admin/data', { cache: 'no-store' });
       if (res.status === 401) return setState('login');
       if (!res.ok) throw new Error();
-      setData(await res.json());
+      const json = await res.json();
+      setData({ ambassadors: [], sponsors: [], stats: null, ...json });
       setState('ready');
     } catch {
       setState('error');
@@ -323,13 +336,16 @@ const Admin = () => {
 
   const removeEmail = email =>
     setData(d => ({
+      ...d,
       applications: d.applications.filter(a => a.email !== email),
       waitlist: d.waitlist.filter(w => w.email !== email)
     }));
 
+  const removeFrom = key => id => setData(d => ({ ...d, [key]: d[key].filter(e => e.id !== id) }));
+
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => {});
-    setData({ applications: [], waitlist: [] });
+    setData({ applications: [], waitlist: [], ambassadors: [], sponsors: [], stats: null });
     setState('login');
   };
 
@@ -346,6 +362,7 @@ const Admin = () => {
     const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
     return since(data.applications, period)
       .filter(a => city === 'all' || a.location === city)
+      .filter(a => interest === 'all' || a.interest === interest)
       .filter(a => barcelona === 'all' || a.barcelona === barcelona)
       .filter(a => video === 'all' || (video === 'yes') === hasVideo(a))
       .filter(a => {
@@ -353,7 +370,7 @@ const Admin = () => {
         return terms.every(term => text.includes(term));
       })
       .sort((a, b) => (b.submittedAt || '').localeCompare(a.submittedAt || ''));
-  }, [data.applications, query, city, barcelona, video, period]);
+  }, [data.applications, query, city, interest, barcelona, video, period]);
 
   const locations = useMemo(() => {
     const counts = new Map();
@@ -368,7 +385,7 @@ const Admin = () => {
       .sort((a, b) => (b.joinedAt || '').localeCompare(a.joinedAt || ''));
   }, [data]);
 
-  const filtered = query || city !== 'all' || barcelona !== 'all' || video !== 'all' || period !== 'all';
+  const filtered = query || city !== 'all' || interest !== 'all' || barcelona !== 'all' || video !== 'all' || period !== 'all';
 
   if (state === 'loading') return <main className="admin admin-center"><p className="admin-muted">Loading…</p></main>;
   if (state === 'login') return <main className="admin admin-center"><Login onSuccess={load} /></main>;
@@ -386,10 +403,12 @@ const Admin = () => {
       <header className="admin-head">
         <div>
           <p className="admin-eyebrow">Project18 Europe · Admin</p>
-          <h1>{tab === 'applications' ? 'Applications' : 'Emails'}</h1>
+          <h1>{TAB_TITLES[tab]}</h1>
           <p className="admin-stats">
             <span><strong>{data.applications.length}</strong> applications</span>
             <span><strong>{data.waitlist.length}</strong> emails</span>
+            <span><strong>{data.ambassadors.length}</strong> ambassadors</span>
+            <span><strong>{data.sponsors.length}</strong> sponsors</span>
           </p>
           <p className="admin-stats">
             <span><strong>{stats.today}</strong> today</span>
@@ -399,10 +418,24 @@ const Admin = () => {
         </div>
         <div className="admin-actions">
           <button type="button" className="admin-link" onClick={load}>Refresh</button>
-          <button type="button" className="admin-link" onClick={() => downloadApplications(applications)}>Export CSV</button>
-          <button type="button" className="admin-link" onClick={() => downloadEmails(data.waitlist, data.applications)}>
-            Export emails
-          </button>
+          {tab === 'applications' && (
+            <button type="button" className="admin-link" onClick={() => downloadApplications(applications)}>Export CSV</button>
+          )}
+          {tab === 'emails' && (
+            <button type="button" className="admin-link" onClick={() => downloadEmails(data.waitlist, data.applications)}>
+              Export emails
+            </button>
+          )}
+          {tab === 'ambassadors' && (
+            <button type="button" className="admin-link" onClick={() => exportCsv('ambassadors', AMBASSADOR_FIELDS, data.ambassadors, 'name')}>
+              Export CSV
+            </button>
+          )}
+          {tab === 'sponsors' && (
+            <button type="button" className="admin-link" onClick={() => exportCsv('sponsors', SPONSOR_FIELDS, data.sponsors, 'company')}>
+              Export CSV
+            </button>
+          )}
           <button type="button" className="admin-link" onClick={logout}>Log out</button>
         </div>
       </header>
@@ -413,6 +446,15 @@ const Admin = () => {
         </button>
         <button type="button" role="tab" aria-selected={tab === 'emails'} onClick={() => setTab('emails')}>
           Emails <span>{data.waitlist.length}</span>
+        </button>
+        <button type="button" role="tab" aria-selected={tab === 'ambassadors'} onClick={() => setTab('ambassadors')}>
+          Ambassadors <span>{data.ambassadors.length}</span>
+        </button>
+        <button type="button" role="tab" aria-selected={tab === 'sponsors'} onClick={() => setTab('sponsors')}>
+          Sponsors <span>{data.sponsors.length}</span>
+        </button>
+        <button type="button" role="tab" aria-selected={tab === 'stats'} onClick={() => setTab('stats')}>
+          Stats
         </button>
       </div>
 
@@ -432,6 +474,12 @@ const Admin = () => {
           value={city}
           onChange={setCity}
           options={[['all', 'All'], ...locations.map(([name, n]) => [name, `${name} (${n})`])]}
+        />
+        <Filter
+          label="Interested in"
+          value={interest}
+          onChange={setInterest}
+          options={[['all', 'All'], ['Community', 'Community'], ['Barcelona 2027', 'Barcelona 2027'], ['Both', 'Both']]}
         />
         <Filter
           label="Barcelona 2027"
@@ -481,6 +529,36 @@ const Admin = () => {
             ))}
           </ul>
         </section>
+      )}
+
+      {tab === 'ambassadors' && (
+        <FormEntries
+          entries={data.ambassadors}
+          type="ambassador"
+          fields={AMBASSADOR_FIELDS}
+          titleKey="name"
+          groupKey="batch"
+          subtitle={e => [e.country, e.batch].filter(Boolean).join(' · ')}
+          onDeleted={removeFrom('ambassadors')}
+          empty="No ambassador applications yet."
+        />
+      )}
+
+      {tab === 'sponsors' && (
+        <FormEntries
+          entries={data.sponsors}
+          type="sponsor"
+          fields={SPONSOR_FIELDS}
+          titleKey="company"
+          groupKey="interest"
+          subtitle={e => [e.name, e.budget].filter(Boolean).join(' · ')}
+          onDeleted={removeFrom('sponsors')}
+          empty="No sponsor requests yet."
+        />
+      )}
+
+      {tab === 'stats' && (
+        <StatsPanel stats={data.stats} applications={data.applications.length} emails={data.waitlist.length} />
       )}
     </main>
   );
