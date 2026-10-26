@@ -59,6 +59,12 @@ export const AMBASSADORS = [
     name: 'Léopold Faure',
     role: 'Startups, Growth & VC · 15',
     bio: 'All-in on startups, growth and VC. Spending a month in San Francisco this summer to learn the ecosystem from the inside and share it with other young founders.'
+  },
+  {
+    country: 'Greece',
+    name: 'Nikolaos Korakianitis',
+    role: 'Founder | KAR AI · 17',
+    bio: 'Building KAR AI, an AI automotive research platform for car matching, comparisons, safety insights and cost of ownership. Freelance writer at GOCAR.gr and ENGin volunteer.'
   }
 ];
 
