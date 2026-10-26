@@ -243,24 +243,59 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
 }
 
 .amb-team li {
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
   text-align: left;
 }
 
-.amb-team li .amb-flag {
+.amb-team-country {
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.amb-team-country .amb-flag {
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.amb-team strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.amb-team em {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.amb-team-bio {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.amb-flag {
   font-size: 26px;
 }
 

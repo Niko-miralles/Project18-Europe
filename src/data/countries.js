@@ -41,7 +41,26 @@ export const COUNTRIES = [
   ['United Kingdom', 'GB']
 ].map(([name, code, mapName]) => ({ name, code, mapName: mapName || name }));
 
-export const AMBASSADORS = [{ country: 'Italy', name: 'Federico Fassio' }];
+export const AMBASSADORS = [
+  {
+    country: 'Italy',
+    name: 'Federico Fassio',
+    role: 'Co-Founder | YET · 16',
+    bio: 'CubeSat PM at Space Eagle. At 16, his team won the ESA EO Makerspace Hackathon at ESA-ESRIN with on-orbit AI that tracks Arctic ice in hours instead of days.'
+  },
+  {
+    country: 'Moldova',
+    name: 'Alexandrina Luca',
+    role: 'CMO & Startup Founder · 15',
+    bio: '15-year-old startup founder and CMO. Content creator who leads marketing and sales, bringing Moldova’s young builders into the community.'
+  },
+  {
+    country: 'France',
+    name: 'Léopold Faure',
+    role: 'Startups, Growth & VC · 15',
+    bio: 'All-in on startups, growth and VC. Spending a month in San Francisco this summer to learn the ecosystem from the inside and share it with other young founders.'
+  }
+];
 
 export const AMBASSADOR_COUNTRIES = AMBASSADORS.map(a => a.country);
 

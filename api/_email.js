@@ -44,8 +44,7 @@ const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-s
 const fill = color => `background-color:${color};background-image:linear-gradient(${color},${color})`;
 const keep = html => `<div class="gs"><div class="gd">${html}</div></div>`;
 
-const message = ({ email, subject, greeting, paragraphs, cta }) => {
-  const url = editLink(email);
+const message = ({ email, subject, greeting, paragraphs, cta, url = editLink(email) }) => {
   const rows = [greeting, ...paragraphs]
     .map(p => `<tr><td style="font-size:15px;line-height:1.6;color:#bdbdbd;padding-bottom:16px">${keep(escapeHtml(p))}</td></tr>`)
     .join('');
@@ -88,3 +87,53 @@ export const confirmationEmail = (email, name) =>
     ],
     cta: 'Edit your application'
   });
+
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'mirallesredes90@gmail.com';
+const CALENDAR_URL = 'https://calendar.app.google/HxAFZcACa5ZDeQwA8';
+
+const LABELS = {
+  ambassador: [['name', 'Name'], ['country', 'Country'], ['batch', 'Batch'], ['email', 'Email'], ['whatsapp', 'WhatsApp'], ['linkedin', 'LinkedIn'], ['why', 'Why you'], ['notes', 'Notes']],
+  sponsor: [['company', 'Company'], ['name', 'Contact'], ['role', 'Role'], ['email', 'Email'], ['website', 'Website'], ['country', 'Country'], ['interest', 'Interested in'], ['budget', 'Budget'], ['message', 'Goals']]
+};
+
+export const notificationEmail = entry => {
+  const rows = LABELS[entry.type].filter(([key]) => entry[key]);
+  const title =
+    entry.type === 'ambassador'
+      ? `New ambassador application: ${entry.name} (${entry.country}, ${entry.batch})`
+      : `New sponsor request: ${entry.company} (${entry.name})`;
+  const html = `<!doctype html><html><body style="margin:0;padding:24px;background:#fff;font-family:${FONT};color:#111">
+<h2 style="margin:0 0 16px;font-size:18px">${escapeHtml(title)}</h2>
+<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:14px;line-height:1.5">
+${rows.map(([key, label]) => `<tr><td style="padding:6px 16px 6px 0;color:#666;vertical-align:top;white-space:nowrap">${label}</td><td style="padding:6px 0;white-space:pre-wrap">${escapeHtml(entry[key])}</td></tr>`).join('')}
+</table>
+<p style="margin:20px 0 0;font-size:13px"><a href="${SITE_URL}/admin">Open the admin</a></p>
+</body></html>`;
+  const text = `${title}\n\n${rows.map(([key, label]) => `${label}: ${entry[key]}`).join('\n')}\n\nAdmin: ${SITE_URL}/admin`;
+  return { from: FROM, to: [NOTIFY_EMAIL], reply_to: entry.email, subject: title, html, text };
+};
+
+export const formConfirmationEmail = entry =>
+  entry.type === 'ambassador'
+    ? message({
+        email: entry.email,
+        url: `${SITE_URL}/ambassadors`,
+        subject: 'Your Project18 Europe ambassador application',
+        greeting: `Hi ${firstName(entry.name)},`,
+        paragraphs: [
+          `Thanks for applying to be the Project18 Europe ambassador for ${entry.country}. We’ve received your application for the ${entry.batch} batch.`,
+          'We read every application ourselves and we’ll get back to you before the batch starts.'
+        ],
+        cta: 'See the ambassador programme'
+      })
+    : message({
+        email: entry.email,
+        url: CALENDAR_URL,
+        subject: 'Thanks for your interest in sponsoring Project18 Europe',
+        greeting: `Hi ${firstName(entry.name)},`,
+        paragraphs: [
+          `Thanks for telling us about ${entry.company}. We’re excited to explore how you can help Europe’s best founders under 18.`,
+          'If you haven’t booked a call yet, pick a time that works for you below.'
+        ],
+        cta: 'Book a call'
+      });

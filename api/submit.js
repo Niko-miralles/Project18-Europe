@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { formConfirmationEmail, notificationEmail, resend } from './_email.js';
 import { EMAIL_PATTERN, FORMS, onlyMethod, rateLimited, redis, sameOrigin, send, text } from './_lib.js';
 
 export default async function handler(req, res) {
@@ -20,6 +21,11 @@ export default async function handler(req, res) {
   try {
     if (await rateLimited(req, `submit-${body.type}`, 10, 3600)) return send(res, 429, { error: 'Too many requests' });
     await redis('HSET', form.key, entry.id, JSON.stringify(entry));
+    const results = await Promise.allSettled([
+      resend('/emails', notificationEmail(entry)),
+      resend('/emails', formConfirmationEmail(entry))
+    ]);
+    for (const r of results) if (r.status === 'rejected') console.error('submit email failed:', r.reason?.message);
     send(res, 200, { ok: true });
   } catch {
     send(res, 500, { error: 'Could not save' });

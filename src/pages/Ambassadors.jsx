@@ -249,13 +249,17 @@ const Ambassadors = () => {
               const c = COUNTRIES.find(x => x.name === a.country);
               return (
                 <li key={a.country}>
-                  <span className="amb-flag" aria-hidden="true">
-                    {c ? flag(c.code) : ''}
-                  </span>
-                  <span>
+                  <div>
+                    <p className="amb-team-country">
+                      <span className="amb-flag" aria-hidden="true">
+                        {c ? flag(c.code) : ''}
+                      </span>
+                      Ambassador · {a.country}
+                    </p>
                     <strong>{a.name}</strong>
-                    <em>Ambassador · {a.country}</em>
-                  </span>
+                    <em>{a.role}</em>
+                    <p className="amb-team-bio">{a.bio}</p>
+                  </div>
                 </li>
               );
             })}
