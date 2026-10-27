@@ -261,7 +261,15 @@ const Ambassadors = () => {
                       </span>
                       Ambassador · {a.country}
                     </p>
-                    <strong>{a.name}</strong>
+                    <strong>
+                      {a.linkedin ? (
+                        <a href={a.linkedin} target="_blank" rel="noreferrer">
+                          {a.name}
+                        </a>
+                      ) : (
+                        a.name
+                      )}
+                    </strong>
                     <em>{a.role}</em>
                     <p className="amb-team-bio">{a.bio}</p>
                   </div>

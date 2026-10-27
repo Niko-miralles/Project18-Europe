@@ -65,6 +65,13 @@ export const AMBASSADORS = [
     name: 'Nikolaos Korakianitis',
     role: 'Founder | KAR AI · 17',
     bio: 'Building KAR AI, an AI automotive research platform for car matching, comparisons, safety insights and cost of ownership. Freelance writer at GOCAR.gr and ENGin volunteer.'
+  },
+  {
+    country: 'Denmark',
+    name: 'William Aagaard',
+    role: 'Partnerships & Outreach | 21Moons',
+    bio: 'Leads partnerships and outreach at 21Moons, with experience in growth, go-to-market and marketing.',
+    linkedin: 'https://www.linkedin.com/in/william-a-/'
   }
 ];
 
