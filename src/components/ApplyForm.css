@@ -100,3 +100,13 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.af-foot .af-error {
+  max-width: 460px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.af-error a {
+  color: #fff;
+}

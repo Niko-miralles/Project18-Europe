@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   entry.submittedAt = new Date().toISOString();
 
   try {
-    if (await rateLimited(req, `submit-${body.type}`, 10, 3600)) return send(res, 429, { error: 'Too many requests' });
+    if (await rateLimited(req, `submit-${body.type}`, 30, 3600)) return send(res, 429, { error: 'Too many requests' });
     await redis('HSET', form.key, entry.id, JSON.stringify(entry));
     const results = await Promise.allSettled([
       resend('/emails', notificationEmail(entry)),

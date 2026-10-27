@@ -236,6 +236,11 @@ const Ambassadors = () => {
                 values={values}
                 onChange={setValues}
                 submitLabel="Send application"
+                fallback={
+                  <>
+                    Or email us at <a href="mailto:info@project18.eu">info@project18.eu</a>.
+                  </>
+                }
                 onDone={() => setDone(true)}
               />
             )}

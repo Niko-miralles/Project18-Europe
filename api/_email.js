@@ -12,7 +12,8 @@ export const resend = async (path, body, method = 'POST') => {
   const res = await fetch(`https://api.resend.com${path}`, {
     method,
     headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    ...(body && { body: JSON.stringify(body) })
+    ...(body && { body: JSON.stringify(body) }),
+    signal: AbortSignal.timeout(8000)
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || `Resend ${res.status}`);

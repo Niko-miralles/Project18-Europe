@@ -3,9 +3,10 @@ import './ApplyForm.css';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const ApplyForm = ({ type, fields, values, onChange, submitLabel = 'Submit', onDone }) => {
+const ApplyForm = ({ type, fields, values, onChange, submitLabel = 'Submit', onDone, fallback }) => {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
+  const [failure, setFailure] = useState('');
 
   const set = (name, value) => {
     onChange({ ...values, [name]: value });
@@ -30,6 +31,15 @@ const ApplyForm = ({ type, fields, values, onChange, submitLabel = 'Submit', onD
       body: JSON.stringify({ type, ...values })
     }).catch(() => null);
     if (!res?.ok) {
+      setFailure(
+        !res
+          ? 'Connection problem. Check your internet and try again.'
+          : res.status === 429
+            ? 'Too many attempts from this connection. Please try again in a little while.'
+            : res.status === 400
+              ? 'Some required fields are missing or invalid.'
+              : 'Something went wrong on our side. Please try again.'
+      );
       setStatus('error');
       return;
     }
@@ -84,7 +94,11 @@ const ApplyForm = ({ type, fields, values, onChange, submitLabel = 'Submit', onD
         <button type="submit" className="ls-apply" aria-busy={status === 'sending'}>
           {status === 'sending' ? 'Sending…' : submitLabel}
         </button>
-        {status === 'error' && <p className="af-error">Something went wrong. Please try again.</p>}
+        {status === 'error' && (
+          <p className="af-error">
+            {failure} {fallback}
+          </p>
+        )}
       </div>
     </form>
   );

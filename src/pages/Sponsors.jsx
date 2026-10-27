@@ -157,6 +157,15 @@ const Sponsors = () => {
                 values={values}
                 onChange={setValues}
                 submitLabel="Continue to book a call"
+                fallback={
+                  <>
+                    You can also{' '}
+                    <a href={CALENDAR_URL} target="_blank" rel="noreferrer">
+                      book a call directly
+                    </a>
+                    .
+                  </>
+                }
                 onDone={() => {
                   setStep('book');
                   formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
