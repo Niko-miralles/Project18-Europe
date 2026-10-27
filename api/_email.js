@@ -138,3 +138,25 @@ export const formConfirmationEmail = entry =>
         ],
         cta: 'Book a call'
       });
+
+export const ambassadorLaunchEmail = email => {
+  const mail = message({
+    email,
+    url: `${SITE_URL}/ambassadors`,
+    subject: 'Introducing Project18 Europe Ambassadors',
+    greeting: 'Hi,',
+    paragraphs: [
+      'We’ve just launched Project18 Europe Ambassadors: one founder under 18 per country who represents Project18 Europe and brings the best young builders in their country into one European community.',
+      'As an ambassador you find founders under 18 near you, connect us with local schools, communities and companies, and spread the word. Every ambassador gets the exclusive Project18 Europe Ambassador hoodie, full access to the community and our events, and a Europe-wide network of ambassadors.',
+      'Ambassadors are already in place in Italy, Moldova, France, Greece and Denmark. Every 3 months a new batch opens, and most countries are still open.',
+      'If you want to represent your country, apply on our website. It only takes a few minutes.'
+    ],
+    cta: 'Apply as ambassador'
+  });
+  const note = 'You’re receiving this because you joined the Project18 Europe waitlist. Reply “unsubscribe” and we’ll remove you.';
+  return {
+    ...mail,
+    html: mail.html.replace('Questions? Reply to this email or write to info@project18.eu.', `Questions? Reply to this email or write to info@project18.eu.<br><br>${note}`),
+    text: `${mail.text}\n\n${note}`
+  };
+};
