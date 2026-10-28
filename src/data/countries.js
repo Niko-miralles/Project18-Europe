@@ -72,6 +72,12 @@ export const AMBASSADORS = [
     role: 'Partnerships & Outreach | 21Moons',
     bio: 'Leads partnerships and outreach at 21Moons, with experience in growth, go-to-market and marketing.',
     linkedin: 'https://www.linkedin.com/in/william-a-/'
+  },
+  {
+    country: 'United Kingdom',
+    name: 'Rayhan Khilji',
+    role: 'Founder | trylumi.co · 17',
+    bio: 'Building Lumi, the personal AI for homeschooled children. 2x hackathon winner, accepted into the SV2 and Claude startup accelerators, ex-intern at Magic AI and Nyobolt, and a Z Fellowship finalist.'
   }
 ];
 
